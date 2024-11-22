@@ -15,6 +15,7 @@ namespace RMA.Controllers
 
         public readonly IAdminRepository _adminRepository;
 
+
         public AccountController(IAdminRepository adminRepository, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             _adminRepository = adminRepository;

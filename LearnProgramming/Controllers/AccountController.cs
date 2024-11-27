@@ -39,9 +39,18 @@ namespace RMA.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Signup(SignupViewModel usermodel)
+        public async Task<IActionResult> Signup(SignupViewModel usermodel)
         {
-
+            IdentityUser user = new IdentityUser()
+            {
+                UserName = usermodel.Name,
+                Email = usermodel.Email
+            };
+            var res = await _userManager.CreateAsync(user, usermodel.Password);
+            if(res.Succeeded)
+            { 
+            return View();
+            }
             return View();
         }
         [HttpGet]

@@ -24,11 +24,42 @@ namespace RMA.Controllers
             _userManager = userManager;
         }
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
+            LoginViewModel model = new();
+
+            if(ReturnUrl!="/" && !string.IsNullOrEmpty(ReturnUrl))
+            {
+                model.ReturnUrl = ReturnUrl;
+            }
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task <IActionResult> Login(LoginViewModel loginModel)
+        {
+            var user=await _userManager.FindByEmailAsync(loginModel.Email);
+            if(user!=null)
+            {
+                var login =await _signInManager.PasswordSignInAsync(user,loginModel.Password,loginModel.RememberMe,false);
+                if(login.Succeeded)
+                {
+                    TempData["Login"] = true;
+                    if(loginModel.ReturnUrl==null)
+                    //TempData.Keep("Login");
+                    return Redirect(loginModel.ReturnUrl);
+                }
+            }
             return View();
         }
-        
+
+        public async Task<IActionResult> Logout()
+        {
+           await _signInManager.SignOutAsync();
+            TempData["Login"] = false;
+            return RedirectToAction("Index","Home");
+            
+        }
         //public IActionResult Login(LoginViewModel loginmodel)
         //{
         //    return View();
@@ -48,8 +79,10 @@ namespace RMA.Controllers
             };
             var res = await _userManager.CreateAsync(user, usermodel.Password);
             if(res.Succeeded)
-            { 
-            return View();
+            {
+               await _signInManager.SignInAsync(user,isPersistent:true);
+                TempData["Login"] = true;
+               return RedirectToAction("Index","Home");
             }
             return View();
         }

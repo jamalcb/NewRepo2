@@ -1,6 +1,7 @@
 using RMA.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RMA.Controllers
 {
@@ -15,9 +16,13 @@ namespace RMA.Controllers
 
         public IActionResult Index()
         {
+            if (TempData["Login"] as bool? == true)
+            {
+               TempData.Keep("Login");
+            }
             return View();
         }
-
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

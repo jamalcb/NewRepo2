@@ -63,12 +63,25 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
+                       @*  <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Login", "Account")">Login</a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Register", "Account")">Sign Up</a>
+                            <a class="nav-link" href="@Url.Action("Signup", "Account")">Sign Up</a>
                         </li>
+                        
+                        @if (TempData["Login"] as bool? == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Login", "Account")">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
